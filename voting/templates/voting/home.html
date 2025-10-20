@@ -1,0 +1,60 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Home - E-Voting System{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 30px 0;">
+    <h2 style="color: #667eea; margin-bottom: 20px;">Welcome to the E-Voting System</h2>
+    <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+        A secure and transparent voting platform powered by blockchain technology
+    </p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
+    <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border-left: 4px solid #667eea;">
+        <h3 style="color: #667eea; margin-bottom: 15px;">🔒 Secure</h3>
+        <p style="color: #666;">Your votes are stored on an immutable blockchain, ensuring integrity and preventing tampering.</p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border-left: 4px solid #764ba2;">
+        <h3 style="color: #764ba2; margin-bottom: 15px;">🔍 Transparent</h3>
+        <p style="color: #666;">All votes are verifiable on the blockchain while maintaining voter anonymity.</p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border-left: 4px solid #28a745;">
+        <h3 style="color: #28a745; margin-bottom: 15px;">⚡ Fast</h3>
+        <p style="color: #666;">Quick and easy voting process with instant verification and results.</p>
+    </div>
+</div>
+
+<div style="margin-top: 40px;">
+    <h3 style="color: #333; margin-bottom: 20px;">Active Elections</h3>
+    
+    {% if elections %}
+        <div style="display: grid; gap: 20px;">
+            {% for election in elections %}
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">{{ election.title }}</h4>
+                    <p style="color: #666; margin-bottom: 15px;">{{ election.description }}</p>
+                    <div style="margin-bottom: 15px; color: #666;">
+                        <strong>Start:</strong> {{ election.start_date|date:"M d, Y - h:i A" }}<br>
+                        <strong>End:</strong> {{ election.end_date|date:"M d, Y - h:i A" }}
+                    </div>
+                    <div>
+                        <a href="{% url 'election_detail' election.id %}" class="btn">View Details</a>
+                        {% if election.is_ongoing %}
+                            <a href="{% url 'vote' election.id %}" class="btn" style="background: #28a745; margin-left: 10px;">Vote Now</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #666; text-align: center; padding: 40px;">No active elections at the moment.</p>
+    {% endif %}
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <a href="{% url 'election_list' %}" class="btn btn-secondary">View All Elections</a>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Elections - E-Voting System{% endblock %}
+
+{% block content %}
+<h2 style="color: #667eea; margin-bottom: 30px;">All Elections</h2>
+
+{% if elections %}
+    <div style="display: grid; gap: 20px;">
+        {% for election in elections %}
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">{{ election.title }}</h4>
+                        <p style="color: #666; margin-bottom: 15px;">{{ election.description }}</p>
+                        <div style="margin-bottom: 15px; color: #666;">
+                            <strong>Start:</strong> {{ election.start_date|date:"M d, Y - h:i A" }}<br>
+                            <strong>End:</strong> {{ election.end_date|date:"M d, Y - h:i A" }}
+                        </div>
+                    </div>
+                    <div>
+                        {% if election.is_ongoing %}
+                            <span style="background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px;">Active</span>
+                        {% else %}
+                            <span style="background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px;">Closed</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <a href="{% url 'election_detail' election.id %}" class="btn">View Details</a>
+                    <a href="{% url 'results' election.id %}" class="btn btn-secondary" style="margin-left: 10px;">View Results</a>
+                    {% if election.is_ongoing %}
+                        <a href="{% url 'vote' election.id %}" class="btn" style="background: #28a745; margin-left: 10px;">Vote Now</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p style="color: #666; text-align: center; padding: 40px;">No elections found.</p>
+{% endif %}
+{% endblock %}

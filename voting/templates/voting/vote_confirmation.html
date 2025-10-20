@@ -1,0 +1,53 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Vote Confirmed{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 40px 0;">
+    <div style="width: 100px; height: 100px; background: #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; color: white; font-size: 60px;">
+        ✓
+    </div>
+    
+    <h2 style="color: #28a745; margin-bottom: 20px;">Vote Successfully Recorded!</h2>
+    <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+        Your vote has been securely stored on the blockchain.
+    </p>
+</div>
+
+<div style="background: #f8f9fa; padding: 25px; border-radius: 8px; max-width: 600px; margin: 0 auto 30px;">
+    <h3 style="color: #333; margin-bottom: 20px;">Vote Details</h3>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Election:</strong> {{ vote.election.title }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Candidate:</strong> {{ vote.candidate.name }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Timestamp:</strong> {{ vote.timestamp|date:"M d, Y - h:i:s A" }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Blockchain Hash:</strong> 
+        <code style="display: block; background: white; padding: 10px; border-radius: 5px; margin-top: 5px; word-break: break-all; font-size: 14px;">
+            {{ vote.blockchain_hash }}
+        </code>
+    </div>
+</div>
+
+<div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 20px; border-radius: 8px; max-width: 600px; margin: 0 auto 30px;">
+    <h4 style="color: #0c5460; margin-bottom: 10px;">🔒 Your Vote is Secure</h4>
+    <p style="color: #0c5460; margin: 0;">
+        Your vote has been encrypted and stored on an immutable blockchain. 
+        You can verify the integrity of the blockchain at any time.
+    </p>
+</div>
+
+<div style="text-align: center;">
+    <a href="{% url 'home' %}" class="btn">Return to Home</a>
+    <a href="{% url 'results' vote.election.id %}" class="btn btn-secondary" style="margin-left: 10px;">View Results</a>
+    <a href="{% url 'blockchain' %}" class="btn btn-secondary" style="margin-left: 10px;">View Blockchain</a>
+</div>
+{% endblock %}
