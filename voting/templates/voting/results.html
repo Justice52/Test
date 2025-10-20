@@ -1,0 +1,64 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Results - {{ election.title }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'election_detail' election.id %}" style="color: #667eea; text-decoration: none;">← Back to Election</a>
+</div>
+
+<h2 style="color: #667eea; margin-bottom: 30px;">{{ election.title }} - Results</h2>
+
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+    <h3 style="color: #333; margin-bottom: 15px;">Total Votes Cast</h3>
+    <p style="font-size: 48px; color: #667eea; font-weight: bold; margin: 0;">{{ total_votes }}</p>
+</div>
+
+{% if results %}
+    <div style="display: grid; gap: 20px;">
+        {% for result in results %}
+            <div style="background: white; border: 2px solid {% if forloop.first %}#28a745{% else %}#dee2e6{% endif %}; padding: 20px; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
+                        {% if forloop.first %}
+                            <span style="font-size: 36px;">🏆</span>
+                        {% else %}
+                            <span style="font-size: 36px; opacity: 0.3;">{{ forloop.counter }}</span>
+                        {% endif %}
+                        
+                        {% if result.candidate.photo %}
+                            <img src="{{ result.candidate.photo.url }}" alt="{{ result.candidate.name }}" 
+                                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                                {{ result.candidate.name|first|upper }}
+                            </div>
+                        {% endif %}
+                        
+                        <div style="flex: 1;">
+                            <h4 style="color: #333; margin-bottom: 5px;">{{ result.candidate.name }}</h4>
+                            <p style="color: #666; margin: 0; font-size: 14px;">{{ result.candidate.description|default:"" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: right; min-width: 150px;">
+                        <div style="font-size: 32px; color: #667eea; font-weight: bold;">{{ result.votes }}</div>
+                        <div style="color: #666; font-size: 18px;">{{ result.percentage|floatformat:1 }}%</div>
+                    </div>
+                </div>
+                
+                <div style="background: #e9ecef; border-radius: 10px; height: 30px; overflow: hidden;">
+                    <div style="background: {% if forloop.first %}#28a745{% else %}#667eea{% endif %}; height: 100%; width: {{ result.percentage }}%; transition: width 1s ease;"></div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p style="color: #666; text-align: center; padding: 40px;">No votes have been cast yet.</p>
+{% endif %}
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{% url 'blockchain' %}" class="btn">Verify on Blockchain</a>
+    <a href="{% url 'election_list' %}" class="btn btn-secondary" style="margin-left: 10px;">All Elections</a>
+</div>
+{% endblock %}

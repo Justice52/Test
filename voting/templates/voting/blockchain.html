@@ -1,0 +1,89 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Blockchain - E-Voting System{% endblock %}
+
+{% block content %}
+<h2 style="color: #667eea; margin-bottom: 30px;">Blockchain Explorer</h2>
+
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+        <div>
+            <h3 style="color: #333; margin-bottom: 10px;">Chain Length</h3>
+            <p style="font-size: 36px; color: #667eea; font-weight: bold; margin: 0;">{{ chain_length }}</p>
+        </div>
+        <div>
+            <h3 style="color: #333; margin-bottom: 10px;">Chain Status</h3>
+            <p style="font-size: 24px; margin: 0;">
+                {% if is_valid %}
+                    <span style="color: #28a745; font-weight: bold;">✓ Valid</span>
+                {% else %}
+                    <span style="color: #dc3545; font-weight: bold;">✗ Invalid</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+
+<h3 style="color: #333; margin-bottom: 20px;">Blocks</h3>
+
+<div style="display: grid; gap: 20px;">
+    {% for block in chain %}
+        <div style="background: white; border: 2px solid {% if forloop.first %}#ffc107{% else %}#dee2e6{% endif %}; padding: 20px; border-radius: 8px; position: relative;">
+            {% if forloop.first %}
+                <div style="position: absolute; top: 10px; right: 10px; background: #ffc107; color: #000; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                    GENESIS
+                </div>
+            {% endif %}
+            
+            <div style="margin-bottom: 15px;">
+                <h4 style="color: #667eea; margin-bottom: 10px;">Block #{{ block.index }}</h4>
+                <div style="color: #666; font-size: 14px;">
+                    <strong>Timestamp:</strong> {{ block.timestamp|floatformat:0 }}
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <strong style="color: #333;">Hash:</strong>
+                <code style="display: block; background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 5px; word-break: break-all; font-size: 12px;">
+                    {{ block.hash }}
+                </code>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <strong style="color: #333;">Previous Hash:</strong>
+                <code style="display: block; background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 5px; word-break: break-all; font-size: 12px;">
+                    {{ block.previous_hash }}
+                </code>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <strong style="color: #333;">Nonce:</strong> {{ block.nonce }}
+            </div>
+            
+            <div>
+                <strong style="color: #333;">Data:</strong>
+                <pre style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 5px; overflow-x: auto; font-size: 12px;">{{ block.data }}</pre>
+            </div>
+            
+            {% if not forloop.last %}
+                <div style="text-align: center; margin-top: 15px; color: #667eea; font-size: 24px;">
+                    ↓
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+<div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 20px; border-radius: 8px; margin-top: 30px;">
+    <h4 style="color: #0c5460; margin-bottom: 10px;">ℹ️ About the Blockchain</h4>
+    <p style="color: #0c5460; margin: 0;">
+        Each block contains vote data and is linked to the previous block through cryptographic hashing. 
+        This creates an immutable chain where any attempt to alter past votes would invalidate the entire chain.
+        The nonce value represents the proof-of-work completed to mine each block.
+    </p>
+</div>
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{% url 'home' %}" class="btn">Return to Home</a>
+</div>
+{% endblock %}

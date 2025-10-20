@@ -1,0 +1,57 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Vote - {{ election.title }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'election_detail' election.id %}" style="color: #667eea; text-decoration: none;">← Back to Election</a>
+</div>
+
+<h2 style="color: #667eea; margin-bottom: 20px;">Cast Your Vote</h2>
+
+<div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 5px; margin-bottom: 30px;">
+    <strong>⚠️ Important:</strong> Once you submit your vote, it will be recorded on the blockchain and cannot be changed.
+</div>
+
+<h3 style="color: #333; margin-bottom: 20px;">{{ election.title }}</h3>
+
+<form method="post" style="margin-top: 30px;">
+    {% csrf_token %}
+    
+    <div style="display: grid; gap: 20px; margin-bottom: 30px;">
+        {% for candidate in candidates %}
+            <label style="background: white; border: 2px solid #dee2e6; padding: 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s;" 
+                   onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 5px 15px rgba(102, 126, 234, 0.2)';" 
+                   onmouseout="this.style.borderColor='#dee2e6'; this.style.boxShadow='none';">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <input type="radio" name="candidate_id" value="{{ candidate.id }}" required 
+                           style="width: 24px; height: 24px; cursor: pointer;">
+                    
+                    {% if candidate.photo %}
+                        <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" 
+                             style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-size: 32px;">
+                            {{ candidate.name|first|upper }}
+                        </div>
+                    {% endif %}
+                    
+                    <div style="flex: 1;">
+                        <h4 style="color: #667eea; margin-bottom: 5px;">{{ candidate.name }}</h4>
+                        <p style="color: #666; margin: 0;">{{ candidate.description|default:"" }}</p>
+                    </div>
+                </div>
+            </label>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center;">
+        <button type="submit" class="btn" style="background: #28a745; font-size: 18px; padding: 15px 40px;">
+            Submit Vote
+        </button>
+        <a href="{% url 'election_detail' election.id %}" class="btn btn-secondary" style="margin-left: 10px; font-size: 18px; padding: 15px 40px;">
+            Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}
